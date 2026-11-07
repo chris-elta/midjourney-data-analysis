@@ -1,0 +1,334 @@
+{
+  "raw": {
+    "rows": 246381,
+    "rows_by_split": {
+      "train": 221743,
+      "validation": 12318,
+      "test": 12320
+    },
+    "sha256": {
+      "train": "c13d7d1e2308ccaf41eb80e93a815e9da1c8bf983b704f99811dbb2815f0a62b",
+      "validation": "553a0a02395bb07e417654bd97736377a04769c89d7b95b431adada3f59c5539",
+      "test": "57f8a944bb5481147ecd24885efbf7345e9d6b7c1ee0c7b01d53fbae9f490eb0"
+    }
+  },
+  "audit": {
+    "chars_median": 15.0,
+    "chars_q1": 4.0,
+    "chars_q3": 95.0,
+    "chars_max": 1875,
+    "exact_duplicate_rows": 180983,
+    "normalised_duplicate_rows": 181269,
+    "unique_normalised": 65112,
+    "fragment_counts": {
+      "prompt": 120357,
+      "short_fragment": 59726,
+      "aspect_ratio_only": 34571,
+      "url_or_params_only": 14832,
+      "number_only": 13922,
+      "empty": 1597,
+      "symbols_only": 1376
+    },
+    "url_rows": 1268,
+    "leakage": {
+      "validation": {
+        "all_rows_in_train": 0.8421009904205228,
+        "prompt_rows_in_train": 0.6993606998654105
+      },
+      "test": {
+        "all_rows_in_train": 0.831737012987013,
+        "prompt_rows_in_train": 0.6842364532019705
+      }
+    }
+  },
+  "flow": {
+    "raw_rows": 246381,
+    "excluded_non_prompt": 126024,
+    "prompt_rows": 120357,
+    "excluded_duplicates": 62687,
+    "corpus": 57670,
+    "min_content_words": 3
+  },
+  "rq1": {
+    "words_median": 12.0,
+    "words_q1": 7.0,
+    "words_q3": 21.0,
+    "words_mean": 16.32144962718918,
+    "words_sd": 13.961604743957587,
+    "any_param_pct": 47.61401075082365,
+    "param_pct": {
+      "aspect": 36.06034333275533,
+      "width": 5.984047164903763,
+      "height": 5.921623027570661,
+      "uplight": 5.259233570313855,
+      "no": 3.9552627015779436,
+      "wallpaper": 1.3039708687359113,
+      "stop": 1.2259406970695335,
+      "test": 1.1773885902548986,
+      "hd": 1.0750823651812034,
+      "other": 0.6606554534419976,
+      "image_weight": 0.33639674007282816,
+      "fast": 0.2774406103693428,
+      "seed": 0.26703658748049247,
+      "vibe": 0.17860239292526445,
+      "style": 0.1421883128142882,
+      "video": 0.136986301369863
+    },
+    "aspect_top": {
+      "16:9": 6798,
+      "9:16": 2501,
+      "2:3": 1509,
+      "4:5": 822,
+      "16:8": 694,
+      "3:4": 601,
+      "11:17": 546,
+      "3:2": 474,
+      "2:1": 441,
+      "4:3": 395
+    },
+    "aspect_rows": 20723,
+    "weight_pct": 8.349228368302409,
+    "separator_pct": {
+      "comma": 60.42483093462806,
+      "none": 38.73070920756025,
+      "pipe": 0.8444598578116871
+    }
+  },
+  "rq2": {
+    "artist_strict_pct": 14.380093636205999,
+    "artist_lenient_pct": 24.333275533206173,
+    "artist_distinct_lenient": 4557,
+    "artist_top": {
+      "craig mullins": 345,
+      "peter mohrbacher": 247,
+      "hajime sorayama": 192,
+      "sarah morris": 186,
+      "wlop": 174,
+      "artgerm": 168,
+      "hokusai": 165,
+      "annie leibovitz": 160,
+      "charlie bowater": 151,
+      "ashley wood": 150,
+      "miyazaki": 142,
+      "studio ghibli": 137,
+      "tsutomu nihei": 132,
+      "stefan gesell": 132,
+      "james jean": 131
+    },
+    "booster_any_pct": 36.219871683717706,
+    "booster_pct": {
+      "cinematic": 10.794173747182244,
+      "8k": 9.97745795040749,
+      "artstation": 8.69429512744928,
+      "octane render": 7.709380960638113,
+      "4k": 5.406623894572568,
+      "intricate": 5.040749089647997,
+      "highly detailed": 4.721692387723253,
+      "unreal engine": 4.054100919022022,
+      "concept art": 3.8130743887636553,
+      "trending on artstation": 3.688226114097451,
+      "photorealistic": 3.3726374198023237,
+      "hyper realistic": 2.6703658748049244,
+      "hyperrealistic": 2.2056528524362755,
+      "hd": 1.6889197156233744,
+      "hyper detailed": 1.501647303624068
+    }
+  },
+  "rq3": {
+    "vocab_size": 4381,
+    "n_topics": 10,
+    "topics": [
+      {
+        "top_words": [
+          "render",
+          "octane",
+          "unreal",
+          "engine",
+          "high",
+          "artstation",
+          "alien",
+          "photorealistic",
+          "blue",
+          "yellow"
+        ],
+        "share_pct": 8.845153459337611,
+        "jaccard": 0.7986013986013987
+      },
+      {
+        "top_words": [
+          "style",
+          "ghibli",
+          "anime",
+          "poster",
+          "design",
+          "city",
+          "pixar",
+          "studio",
+          "view",
+          "basquiat"
+        ],
+        "share_pct": 10.756025663256459,
+        "jaccard": 0.731934731934732
+      },
+      {
+        "top_words": [
+          "artwork",
+          "van",
+          "john",
+          "peter",
+          "mike",
+          "robert",
+          "david",
+          "jean",
+          "yoji",
+          "shinkawa"
+        ],
+        "share_pct": 0.9935841858852089,
+        "jaccard": 0.5164835164835164
+      },
+      {
+        "top_words": [
+          "art",
+          "concept",
+          "fantasy",
+          "circa",
+          "pulp",
+          "magazine",
+          "epic",
+          "nouveau",
+          "character",
+          "deco"
+        ],
+        "share_pct": 8.61973296341252,
+        "jaccard": 0.9272727272727274
+      },
+      {
+        "top_words": [
+          "painting",
+          "oil",
+          "matte",
+          "abstract",
+          "space",
+          "beautiful",
+          "battle",
+          "hyperrealistic",
+          "cgsociety",
+          "large"
+        ],
+        "share_pct": 9.367088607594937,
+        "jaccard": 0.8410256410256409
+      },
+      {
+        "top_words": [
+          "black",
+          "white",
+          "background",
+          "red",
+          "ink",
+          "photo",
+          "paper",
+          "dark",
+          "illustration",
+          "card"
+        ],
+        "share_pct": 19.205826252817758,
+        "jaccard": 0.9272727272727274
+      },
+      {
+        "top_words": [
+          "portrait",
+          "beautiful",
+          "artstation",
+          "character",
+          "face",
+          "girl",
+          "trending",
+          "woman",
+          "wood",
+          "ashley"
+        ],
+        "share_pct": 12.483093462805618,
+        "jaccard": 0.8545454545454547
+      },
+      {
+        "top_words": [
+          "realistic",
+          "hyper",
+          "photo",
+          "ultra",
+          "old",
+          "epic",
+          "detailed",
+          "realism",
+          "view",
+          "super"
+        ],
+        "share_pct": 9.937575862666897,
+        "jaccard": 0.7934065934065935
+      },
+      {
+        "top_words": [
+          "detailed",
+          "cinematic",
+          "highly",
+          "lighting",
+          "intricate",
+          "dark",
+          "dramatic",
+          "shot",
+          "cgsociety",
+          "epic"
+        ],
+        "share_pct": 16.5909485000867,
+        "jaccard": 0.716017316017316
+      },
+      {
+        "top_words": [
+          "vector",
+          "psychedelic",
+          "flat",
+          "rule",
+          "symmetrical",
+          "thirds",
+          "digital",
+          "colorful",
+          "centered",
+          "palette"
+        ],
+        "share_pct": 3.2009710421362927,
+        "jaccard": 1.0
+      }
+    ],
+    "stability_mean_jaccard": 0.8106560106560107,
+    "stability_runs": 5
+  },
+  "rq4": {
+    "h1": {
+      "n_param": 27459,
+      "n_no_param": 30211,
+      "median_param": 17.0,
+      "median_no_param": 9.0,
+      "U": 579318860.0,
+      "p": 0.0,
+      "rank_biserial": 0.39668299359559
+    },
+    "h2": {
+      "table": [
+        [
+          28755,
+          14882
+        ],
+        [
+          8027,
+          6006
+        ]
+      ],
+      "chi2": 347.50845174387734,
+      "dof": 1,
+      "p": 1.4781380609628775e-77,
+      "cramers_v": 0.07762608975093628,
+      "boost_pct_if_artist": 42.79911636855982,
+      "boost_pct_if_no_artist": 34.10408598207943
+    }
+  }
+}

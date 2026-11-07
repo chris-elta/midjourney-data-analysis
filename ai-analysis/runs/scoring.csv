@@ -1,0 +1,11 @@
+run,question,ai_value,our_value,difference,handled_quality_issues,stated_rules,showed_code,code_reproduces,invented_or_wrong,notes
+A,P1 duplicate rows,,180983,,,,,,,
+A,P1 test rows in train (%),,83.2,,,,,,,
+A,P2 median content words,,12,,,,,,,
+A,P2 any parameter (%),,47.6,,,,,,,
+A,P2 --ar used (%),,36.1,,,,,,,
+A,P3 artist named (%),,14.4 strict / 24.3 lenient,,,,,,,
+A,P3 quality phrase (%),,36.2,,,,,,,
+A,P4 topics stable (mean Jaccard),,0.81,,,,,,,
+A,P5 H1 effect size,,rank-biserial 0.40,,,,,,,
+A,P5 H2 effect size,,Cramer's V 0.08,,,,,,,

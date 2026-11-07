@@ -1,0 +1,116 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COMP 9200 Assignment 3, Part 2 -- first draft of the proposal's
+% methodology section (individual).
+%
+% Proposal: Beyond Complexity Reduction: Probability Sensitivity in
+% LLM-Based Code Generation Systems (see assignment1/submission/part2).
+%
+% This file is a skeleton only: headings plus the questions each section
+% has to answer. Replace every \todo{} with your own text.
+% Build: latexmk -pdf COMP9200_A3_Part2_Methodology.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{Beyond Complexity Reduction: Probability Sensitivity in LLM-Based
+Code Generation Systems\\[0.2em] \large Methodology (First Draft)}
+
+\author{
+\IEEEauthorblockN{Christopher Elliott}
+\IEEEauthorblockA{\textit{COMP 9200: Applied Research Methods} \\
+\textit{School of Computing and Academic Studies} \\
+\textit{British Columbia Institute of Technology}, Burnaby, Canada \\
+celliott64@my.bcit.ca}
+}
+
+\begin{document}
+\maketitle
+
+\section{Research Design}
+\todo{Name the design and justify it. Which parts are experimental
+(manipulated surface typicality, Subproblem 2) and which are
+correlational or descriptive (Subproblems 1 and 3)? What are the
+independent, dependent and control variables? State the hypotheses for
+each subproblem. Relate the design to the controlled approach of McCoy et
+al.\ \cite{mccoyEmbersAutoregressionUnderstanding2023}.}
+
+\section{Data Collection}
+
+\subsection{Tasks and Materials}
+\todo{Which benchmark or task source (single-function / single-file only,
+per your delimitations)? How many tasks, and how are they chosen? Why is
+that number enough (power analysis or precedent)?}
+
+\subsection{Constructing Matched Request Pairs}
+\todo{How a ``typical'' and an ``unusual'' wording are written for each
+task while keeping behaviour, test suite, language, library and algorithm
+fixed. Who writes them, using what written guide, and how the second
+person checks each pair.}
+
+\subsection{Models and Scoring}
+\todo{Which open-weight model(s) score input and output probability, and
+which model(s) generate code. Exact versions, decoding settings
+(temperature, samples per task), hardware. Total and per-token
+log-probability, and why both.}
+
+\subsection{Harness Condition (Subproblem 3)}
+\todo{Which harness (e.g.\ Agentless), how its sub-prompts are captured
+and scored, and what the single-prompt comparison is.}
+
+\subsection{Procedure}
+\todo{Step-by-step order of operations, so another researcher could repeat
+it. What is logged at each step.}
+
+\section{Data Analysis}
+\todo{For each subproblem: the statistical test or model, the unit of
+analysis, how repeated measures on the same task are handled (e.g.\ paired
+tests or mixed-effects models), effect sizes, and correction for multiple
+comparisons. How the two outcome measures (passes tests; matches
+reference) are analysed. What result would support or refute each
+hypothesis.}
+
+\section{Validity and Reliability}
+
+\subsection{Validity of Instruments}
+\todo{Construct validity: does model log-probability measure
+``typicality''? How Subproblem 1 checks this. Content validity of the
+request pairs: how you show a pair differs only in surface form.}
+
+\subsection{Reliability of Instruments}
+\todo{Inter-rater agreement on pair equivalence (e.g.\ Cohen's $\kappa$,
+with a threshold and what happens below it). Test--retest stability of
+probability scores and of generated-code pass rates across seeds.}
+
+\subsection{Threats to Internal and External Validity}
+\todo{Confounds such as prompt length, benchmark contamination, and the
+open-weight model standing in for closed ones. How each is controlled or
+measured. What the results do and do not generalise to.}
+
+\section{Ethical Considerations}
+\todo{Licences of benchmarks and models, compute cost, whether any human
+participants (the second rater) need consent, data and code release.}
+
+\section{Limitations}
+\todo{What the design cannot show, beyond the delimitations already
+stated in the proposal.}
+
+\appendices
+\section{Use of AI Tools}
+\todo{Your AI use statement for this part.}
+
+\bibliographystyle{IEEEtran}
+\bibliography{c9200references}
+
+\end{document}

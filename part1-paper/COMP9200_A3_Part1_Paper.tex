@@ -1,0 +1,387 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COMP 9200 Assignment 3, Part 1 -- AI-assisted vs. own analysis (pairs)
+% Dataset: succinctly/midjourney-prompts (Hugging Face)
+%
+% Build:   latexmk -pdf COMP9200_A3_Part1_Paper.tex
+% Numbers: every \Macro in the text comes from tables/numbers.tex, which
+%          analysis/pipeline.py writes. Re-run the pipeline, rebuild, done.
+% Status:  sections marked \todo{} still need writing. The methodology and
+%          "our pipeline" results are drafted from the real pipeline output;
+%          everything about the AI arm waits for the runs in ai-analysis/.
+% Length:  4-6 pages. Check whether the appendix counts toward the limit.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\input{tables/numbers}
+
+\title{Same Data, Two Analysts: Comparing a Generative AI Tool with a
+Scripted Pipeline on Midjourney Prompts}
+
+\author{
+\IEEEauthorblockN{Christopher Elliott}
+\IEEEauthorblockA{\textit{COMP 9200: Applied Research Methods} \\
+\textit{British Columbia Institute of Technology}\\
+Burnaby, Canada \\
+celliott64@my.bcit.ca}
+\and
+\IEEEauthorblockN{\todo{Partner name}}
+\IEEEauthorblockA{\textit{COMP 9200: Applied Research Methods} \\
+\textit{British Columbia Institute of Technology}\\
+Burnaby, Canada \\
+\todo{email}}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\todo{Write last, 150--200 words.} We analysed \NRaw{} rows of user
+prompts from the Midjourney Discord server twice: once with a generative AI
+tool given only the data and a fixed sequence of questions, and once with a
+scripted Python pipeline. Our pipeline found that \PctNonPrompt\% of rows
+are not prompts and \PctDupRows\% are exact duplicates, and that
+\PctTestLeak\% of test rows also appear in the training split. On the
+de-duplicated corpus of \NCorpus{} prompts we report prompt structure,
+artist references, quality-booster phrases and topics. \todo{One or two
+sentences on how the AI analysis compared, and the main lesson.}
+\end{abstract}
+
+\begin{IEEEkeywords}
+generative AI, data analysis, reproducibility, text-to-image prompts,
+data quality, topic modelling
+\end{IEEEkeywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Generative AI tools can now load a data file, write and run analysis code,
+and summarise the results in plain language. This makes them attractive as
+research assistants, but it raises questions about rigor, transparency and
+reproducibility: the analyst may not see the decisions the tool made, and
+the same request can give different answers on different days.
+
+We study this by giving the same public dataset and the same research
+questions to a generative AI tool and to our own scripted pipeline, and
+comparing the two. The dataset is a collection of text-to-image prompts
+from the Midjourney Discord server \cite{succinctlyMidjourneyPrompts2022}.
+It suits the comparison because it has a single free-text column, so every
+variable has to be derived by rules the analyst chooses.
+
+Our research questions are:
+\begin{itemize}
+  \item \textbf{RQ1:} What does a typical prompt look like (length,
+        parameters, aspect ratios)?
+  \item \textbf{RQ2:} How often do prompts name an artist or use generic
+        ``quality booster'' phrases?
+  \item \textbf{RQ3:} What themes do prompts cover, and how stable are the
+        topics found?
+  \item \textbf{RQ4:} Are parameter use and prompt length related, and are
+        artist references and booster phrases related?
+\end{itemize}
+For each question we compare the AI tool and our pipeline on findings,
+rigor, transparency, bias and reproducibility.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Related Work}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textit{Text-to-image prompts.} Liu and Chilton derived design guidelines
+for prompting text-to-image models \cite{liuDesignGuidelinesPrompt2022},
+and Oppenlaender proposed a taxonomy of prompt modifiers such as style and
+quality boosters \cite{oppenlaenderTaxonomyPromptModifiers2023}. Large
+prompt collections such as DiffusionDB \cite{wangDiffusionDB2023} and
+prompt-log studies \cite{xiePromptLogAnalysis2023} describe how users write
+prompts in practice. \todo{One sentence on what they found that we check.}
+
+\textit{AI as data analyst.} Cheng et al.\ evaluated GPT-4 as a data
+analyst \cite{chengGPT4GoodData2023}. \todo{One sentence on findings.}
+
+\textit{Analytic flexibility and data quality.} Silberzahn et al.\ showed
+that independent analysts given the same data reach different conclusions
+\cite{silberzahnManyAnalysts2018}; an AI tool is one more analyst whose
+choices may be hidden. Duplicates in text corpora inflate evaluation
+results \cite{leeDeduplicating2022}, and datasheets
+\cite{gebruDatasheets2021} were proposed to document how a dataset was
+collected and what it should be used for.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dataset}
+\texttt{succinctly/midjourney-prompts} \cite{succinctlyMidjourneyPrompts2022}
+contains \NRaw{} rows with a single \texttt{text} column, split into train
+(221,743), validation (12,318) and test (12,320). It was derived from a
+Kaggle scrape of the public Midjourney Discord server
+\cite{kaggleMidjourney250k}, keeping only the user's text. It has no user
+identifiers, timestamps or images, and is released under Apache-2.0. We
+downloaded the Parquet files on 6 Nov.\ 2026 and recorded their SHA-256
+hashes (Appendix~\ref{app:repro}).
+
+\subsection{Preprocessing}
+All rules are defined in one file (\texttt{features.py}) so they can be
+quoted and checked.
+\begin{itemize}
+  \item \textit{Parameters} are tokens of the form \texttt{--name value}.
+        Because phones and Discord often turn \texttt{--} into an en or em
+        dash, all three are accepted. Names are mapped to canonical forms
+        (e.g.\ \texttt{--ar} and \texttt{--aspect} to \textit{aspect}).
+  \item \textit{Content words} are the alphabetic tokens left after
+        removing parameters, URLs and \texttt{::} weights.
+  \item \textit{Row type.} A row is a \textit{prompt} if it has at least
+        three content words; otherwise it is classed as empty, aspect ratio
+        only, number only, URL or parameters only, symbols only, or a short
+        fragment (Table~\ref{tab:fragments}).
+  \item \textit{Duplicates} are found after lower-casing and collapsing
+        whitespace. The first copy is kept.
+\end{itemize}
+Because \PctTestLeak\% of test rows already appear in train, the provided
+splits are not meaningful for descriptive analysis. We pool all splits and
+de-duplicate, giving an analytic corpus of \NCorpus{} prompts
+(Table~\ref{tab:flow}).
+
+\begin{table}[t]
+\centering
+\caption{Row types in the raw data (all splits).}
+\label{tab:fragments}
+\input{tables/fragments}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{From raw rows to analytic corpus.}
+\label{tab:flow}
+\input{tables/flow}
+\end{table}
+
+\subsection{AI Tool Setup}
+\todo{From ai-analysis/PROTOCOL.md section 1: tool, model and version,
+dates, settings (memory, custom instructions and web search off), the file
+uploaded and its hash.} The tool was given the full dataset as a CSV file
+and a fixed sequence of seven prompts (P0--P6): an open-ended request,
+one prompt per research question, and a request for the complete code
+(Appendix~\ref{app:prompts}). No corrections or hints were given between
+prompts. The sequence was run three times in fresh sessions (runs A, B, C)
+to measure run-to-run variation.
+
+\subsection{Our Pipeline}
+The pipeline is a Python script (\texttt{pipeline.py}) using pandas, SciPy
+and scikit-learn \cite{pedregosaScikitlearn2011}, with pinned library
+versions and a fixed random seed. It checks the input files' hashes,
+applies the preprocessing above, and writes every reported number, table
+and figure, so the paper cannot drift from the code.
+
+\textit{RQ1} reports medians and interquartile ranges of content words,
+the share of prompts using each parameter, and aspect-ratio counts.
+
+\textit{RQ2} detects artist references with two rules, to show how much the
+answer depends on the rule: a \textit{strict} rule (``by'' or ``in the
+style of'' followed by capitalised words) and a \textit{lenient} rule (the
+same cue words in any case, split on ``and'' and commas). Quality boosters
+are matched against a fixed list of \NBoosters{} phrases taken from common prompt
+advice (e.g.\ ``trending on artstation'', ``8k'', ``octane render'').
+
+\textit{RQ3} fits a TF-IDF representation (minimum document frequency 20,
+English stop words removed) and non-negative matrix factorisation (NMF)
+\cite{leeSeungNMF1999} with $k=10$ topics. To test stability, we refit on
+five random 80\% subsamples with random initialisation, match topics to
+the reference run, and report the Jaccard overlap $J$ of their top ten
+words.
+
+\textit{RQ4} tests H1 (prompts with any parameter are longer) with a
+Mann--Whitney $U$ test and rank-biserial correlation, and H2 (artist
+references are associated with booster phrases) with a $\chi^2$ test and
+Cram\'er's $V$. With $n=\NCorpus$, almost any difference is
+significant, so we interpret effect sizes, not $p$-values.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Table~\ref{tab:compare} sets the headline numbers side by side. The
+subsections give our pipeline's results and then the AI tool's.
+
+\begin{table*}[t]
+\centering
+\caption{Headline results: AI tool (run A) vs.\ our pipeline.}
+\label{tab:compare}
+\begin{tabular}{llll}
+\toprule
+Question & Measure & AI tool (run A) & Our pipeline \\
+\midrule
+Data quality & Exact duplicate rows & \todo{} & \NDupRows{} (\PctDupRows\%) \\
+             & Test rows also in train & \todo{} & \PctTestLeak\% \\
+RQ1 & Median content words (IQR) & \todo{} & \MedianWords{} (\IQRWords) \\
+    & Prompts using any parameter & \todo{} & \PctAnyParam\% \\
+    & Prompts using \texttt{--ar} & \todo{} & \PctAspect\% \\
+RQ2 & Prompts naming an artist & \todo{} & \PctArtistStrict\% strict, \PctArtistLenient\% lenient \\
+    & Prompts with a booster phrase & \todo{} & \PctBoosterAny\% \\
+RQ3 & Topic stability & \todo{} & mean $J = \TopicJaccard$ \\
+RQ4 & H1 effect size & \todo{} & $r_{rb} = \HOneRankBiserial$ \\
+    & H2 effect size & \todo{} & $V = \HTwoCramersV$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Data Quality}
+Only \NPromptRows{} of \NRaw{} rows (\PctPromptRows\%) are prompts. The rest are bare
+aspect ratios such as \texttt{16:9}, numbers, lone parameters such as
+\texttt{--uplight}, and one- or two-word fragments
+(Table~\ref{tab:fragments}). The median raw row is \MedianChars{}
+characters long. \NDupRows{} rows (\PctDupRows\%) are exact duplicates of
+an earlier row, and \PctTestLeak\% of test rows (\PctTestPromptLeak\% of
+test rows that are real prompts) also appear in train. A model trained and
+evaluated on these splits would be tested largely on data it had already
+seen \cite{leeDeduplicating2022}.
+
+\subsection{RQ1: Prompt Structure}
+Corpus prompts have a median of \MedianWords{} content words (IQR
+\IQRWords), with a long right tail (Fig.~\ref{fig:length}).
+\PctAnyParam\% use at least one parameter; aspect ratio is by far the most
+common (\PctAspect\%), led by 16:9 and 9:16 (Fig.~\ref{fig:params}).
+\PctWeight\% use \texttt{::} weights. Most prompts are comma-separated
+lists of descriptors rather than sentences.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/length}
+\caption{Content words per corpus prompt.}
+\label{fig:length}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/params}
+\caption{Share of corpus prompts using each parameter.}
+\label{fig:params}
+\end{figure}
+
+\subsection{RQ2: Artists and Quality Boosters}
+The share of prompts naming an artist is \PctArtistStrict\% under the
+strict rule and \PctArtistLenient\% under the lenient rule: the rule alone
+changes the answer by a factor of \ArtistRuleRatio. The most-cited names are concept and
+fantasy illustrators such as Craig Mullins and Peter Mohrbacher
+(Fig.~\ref{fig:artists}). \PctBoosterAny\% of prompts use at least one
+booster phrase, most often ``cinematic'', ``8k'' and ``octane render''.
+\todo{Decide whether to include figures/boosters.pdf or keep it to text.}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/artists}
+\caption{Most-cited artist or studio names (lenient rule).}
+\label{fig:artists}
+\end{figure}
+
+\subsection{RQ3: Topics}
+Table~\ref{tab:topics} lists the ten NMF topics. They separate rendering
+style (octane/unreal render, oil painting, black-and-white ink,
+hyper-realistic photo, vector art) more than subject matter, which is
+consistent with booster phrases dominating word frequencies. Mean
+stability across subsamples is $J=\TopicJaccard$; most topics are stable
+($J>0.7$), but the least stable topic, a mix of artists' first names, is not
+($J=\MinTopicJaccard$). \todo{Re-check topic descriptions if $k$ or the
+vocabulary rules change.}
+
+\begin{table}[t]
+\centering
+\caption{NMF topics: share of prompts, stability $J$, top words.}
+\label{tab:topics}
+\small
+\input{tables/topics}
+\end{table}
+
+\subsection{RQ4: Hypothesis Tests}
+Prompts using a parameter are longer (median \MedianWordsParam{} vs.\ \MedianWordsNoParam{} content words;
+Mann--Whitney $p<.001$, $r_{rb}=\HOneRankBiserial$, a medium effect).
+Artist references and booster phrases are associated ($\chi^2(1)=\HTwoChi$,
+$p<.001$), but the effect is negligible ($V=\HTwoCramersV$): \PctBoostIfArtist\% of
+prompts naming an artist use a booster, against \PctBoostIfNoArtist\% of those
+that do not.
+
+\subsection{AI Tool Results}
+\todo{For each of P0--P6 from run A: what the tool did, the numbers it
+reported, and where it differed from us. Quote short excerpts; full log in
+the appendix. Then: did runs B and C agree with run A? Did the P6 code run,
+and did it reproduce the tool's own numbers?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Interpretation}
+\todo{What the two analyses agree on, where they differ, and why. Tie each
+difference to a specific decision: fragment rule, de-duplication, artist
+rule, topic model and $k$, choice of test.}
+
+\subsection{Validity}
+\todo{Construct validity: are ``named artist'' and ``booster'' measured
+well? The strict/lenient gap shows the measurement is rule-dependent;
+hand-check a random sample of, say, 100 prompts to estimate precision.
+Internal validity of RQ4: association only, no causal claim. External
+validity: one Discord community, 2022, English-dominated, early Midjourney
+versions.}
+
+\subsection{Ethics}
+\todo{Discord users did not consent to research use; the dataset strips
+user names but prompts may still contain personal names or identifying
+text. Artist names: living artists' styles used without consent, an open
+copyright debate. Possible NSFW content. Licence: Apache-2.0 applied to
+scraped third-party text.}
+
+\subsection{Reproducibility and AI Transparency}
+\todo{Our pipeline: pinned versions, hashed inputs, fixed seed, every
+number generated. AI tool: hidden model version, sampling variation across
+runs A--C, whether its code was complete and ran, whether its stated rules
+matched its code. What a reader would need to repeat the AI analysis.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo{Three or four sentences: main finding about the data, main finding
+about AI vs.\ scripted analysis, one practical recommendation.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Use of AI Tools}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo{Review and finish.} The AI-assisted analysis (Part~1a) used
+\todo{tool}, as described in Section~III-C, with all prompts and outputs
+in the appendix. Our own pipeline (Part~1b) and the first draft of this
+paper's structure were written with help from Claude Opus~5.5
+(Anthropic), through Claude Code. We reviewed and ran all code, checked
+every reported number against the pipeline output, and are responsible
+for the final content.
+
+\bibliographystyle{IEEEtran}
+\bibliography{a3references}
+
+\appendices
+
+\section{Prompts Given to the AI Tool}
+\label{app:prompts}
+\todo{Paste P0--P6 verbatim from ai-analysis/PROTOCOL.md, and point to the
+full run logs (ai-analysis/runs/) as supplementary material.}
+
+\section{Reproducibility Details}
+\label{app:repro}
+\todo{From analysis/results/environment.json and data/raw/MANIFEST.json:
+Python and library versions, random seed (9200), SHA-256 of each split,
+and the commands to re-run: \texttt{fetch\_data.py} then
+\texttt{pipeline.py}.}
+
+\end{document}

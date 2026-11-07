@@ -1,0 +1,21 @@
+{
+  "dataset": "succinctly/midjourney-prompts",
+  "files": {
+    "train": {
+      "url": "https://huggingface.co/api/datasets/succinctly/midjourney-prompts/parquet/default/train/0.parquet",
+      "bytes": 8984759,
+      "sha256": "c13d7d1e2308ccaf41eb80e93a815e9da1c8bf983b704f99811dbb2815f0a62b"
+    },
+    "validation": {
+      "url": "https://huggingface.co/api/datasets/succinctly/midjourney-prompts/parquet/default/validation/0.parquet",
+      "bytes": 503680,
+      "sha256": "553a0a02395bb07e417654bd97736377a04769c89d7b95b431adada3f59c5539"
+    },
+    "test": {
+      "url": "https://huggingface.co/api/datasets/succinctly/midjourney-prompts/parquet/default/test/0.parquet",
+      "bytes": 509288,
+      "sha256": "57f8a944bb5481147ecd24885efbf7345e9d6b7c1ee0c7b01d53fbae9f490eb0"
+    }
+  },
+  "checked_at": "2026-11-07T06:28:58+00:00"
+}
