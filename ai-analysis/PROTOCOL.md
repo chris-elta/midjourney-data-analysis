@@ -18,7 +18,7 @@ Fill this in before the first session and copy it into the paper's
 | File uploaded | `analysis/data/midjourney_prompts_all.csv` (columns `split`, `text`; 246,381 rows) |
 | File SHA-256 | `582e6d0977c554135f231e1e03d806535aa4755d61f3425c49ca6bfe28934806` |
 
-Do **not** give the AI our rules from `analysis/features.py` or our results.
+Do **not** give the AI our rules from `analysis/prompt_utils.py` or our results.
 We are testing what it does on its own.
 
 Our own pipeline (Part 1b) was written with help from Claude Code. If you use
