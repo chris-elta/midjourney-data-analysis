@@ -27,6 +27,7 @@ analyze data quality (empty rows, duplicates, non-prompts, overlap between split
 
 **Prompt:**
 analyze prompt length and parameter use
+What does a prompt look like? (length, parameters, aspect ratios)
 
 **Response:**
 
@@ -34,20 +35,22 @@ analyze prompt length and parameter use
 
 **Prompt:**
 analyze artists and quality phrases ("boosters")
+How often do prompts cite artists or use "quality booster" phrases?
+What themes do prompts cover? (TF-IDF + NMF topics, with a stability check across random subsamples)
 
 **Response:**
 
 ## P4
 
 **Prompt:**
-a topic model and how stable it is
+Implement a topic model and how stable it is
 
 **Response:**
 
 ## P5
 
 **Prompt:**
-two hypothesis tests with effect sizes
+Run two hypothesis tests with effect sizes
 
 **Response:**
 

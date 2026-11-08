@@ -137,6 +137,8 @@
   "rq3": {
     "vocab_size": 4381,
     "n_topics": 10,
+    "unassigned_docs": 602,
+    "unassigned_pct": 1.0438702965146522,
     "topics": [
       {
         "top_words": [
@@ -151,7 +153,7 @@
           "blue",
           "yellow"
         ],
-        "share_pct": 8.845153459337611,
+        "share_pct": 7.801283162822958,
         "jaccard": 0.7986013986013987
       },
       {

@@ -31,7 +31,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import features as F
+import prompt_utils as prompt_utils
 
 SEED = 9200
 N_TOPICS = 10
@@ -80,8 +80,8 @@ def load() -> pd.DataFrame:
 # 2. Audit
 # --------------------------------------------------------------------------
 def audit(df: pd.DataFrame) -> pd.DataFrame:
-    df["norm"] = df["text"].map(F.normalise)
-    df["fragment"] = df["text"].map(F.fragment_type)
+    df["norm"] = df["text"].map(prompt_utils.normalise)
+    df["fragment"] = df["text"].map(prompt_utils.fragment_type)
 
     chars = df["text"].str.len()
     R["audit"] = {
@@ -93,7 +93,7 @@ def audit(df: pd.DataFrame) -> pd.DataFrame:
         "normalised_duplicate_rows": int(df["norm"].duplicated().sum()),
         "unique_normalised": int(df["norm"].nunique()),
         "fragment_counts": df["fragment"].value_counts().astype(int).to_dict(),
-        "url_rows": int(df["text"].str.contains(F.URL_RE).sum()),
+        "url_rows": int(df["text"].str.contains(prompt_utils.URL_RE).sum()),
     }
 
     # Leakage: how many validation / test rows also appear in train?
@@ -111,27 +111,27 @@ def audit(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------
-# 3. Corpus
+# 3. Analysis Dataset
 # --------------------------------------------------------------------------
-def corpus(df: pd.DataFrame) -> pd.DataFrame:
+def build_analysis_dataset(df: pd.DataFrame) -> pd.DataFrame:
     prompts = df[df.fragment == "prompt"]
     c = prompts.drop_duplicates("norm").copy()
-    c["content"] = c["text"].map(F.content_text)
-    c["n_words"] = c["text"].map(lambda t: len(F.content_words(t)))
-    c["params"] = c["text"].map(F.params)
+    c["content"] = c["text"].map(prompt_utils.content_text)
+    c["n_words"] = c["text"].map(lambda t: len(prompt_utils.content_words(t)))
+    c["params"] = c["text"].map(prompt_utils.params)
     c["has_param"] = c["params"].map(bool)
-    c["aspect"] = c["text"].map(F.aspect_ratio)
+    c["aspect"] = c["text"].map(prompt_utils.aspect_ratio)
     c["has_weight"] = c["text"].str.contains("::", regex=False)
-    c["artists_strict"] = c["text"].map(lambda t: F.artists(t, "strict"))
-    c["artists_lenient"] = c["text"].map(lambda t: F.artists(t, "lenient"))
-    c["boosters"] = c["content"].map(F.boosters)
+    c["artists_strict"] = c["text"].map(lambda t: prompt_utils.artists(t, "strict"))
+    c["artists_lenient"] = c["text"].map(lambda t: prompt_utils.artists(t, "lenient"))
+    c["boosters"] = c["content"].map(prompt_utils.boosters)
     R["flow"] = {
         "raw_rows": int(len(df)),
         "excluded_non_prompt": int((df.fragment != "prompt").sum()),
         "prompt_rows": int(len(prompts)),
         "excluded_duplicates": int(len(prompts) - len(c)),
         "corpus": int(len(c)),
-        "min_content_words": F.MIN_CONTENT_WORDS,
+        "min_content_words": prompt_utils.MIN_CONTENT_WORDS,
     }
     return c
 
@@ -206,7 +206,12 @@ def rq3(c: pd.DataFrame):
         return [list(vocab[np.argsort(row)[::-1][:TOP_WORDS]]) for row in model.components_]
 
     ref_topics = top_words(ref)
-    share = np.bincount(ref.transform(X).argmax(axis=1), minlength=N_TOPICS) / X.shape[0]
+    # Documents with no in-vocabulary words get an all-zero topic vector, and
+    # argmax would silently put them in topic 1. Count them as unassigned.
+    W = ref.transform(X)
+    assigned = W.sum(axis=1) > 0
+    n_unassigned = int((~assigned).sum())
+    share = np.bincount(W[assigned].argmax(axis=1), minlength=N_TOPICS) / X.shape[0]
 
     # Stability: refit on random 80% subsamples with random initialisation,
     # match each run's topics to the reference (Hungarian on Jaccard), and
@@ -233,6 +238,8 @@ def rq3(c: pd.DataFrame):
     R["rq3"] = {
         "vocab_size": int(len(vocab)),
         "n_topics": N_TOPICS,
+        "unassigned_docs": n_unassigned,
+        "unassigned_pct": 100 * n_unassigned / X.shape[0],
         "topics": [{"top_words": t, "share_pct": 100 * float(s), "jaccard": float(j)}
                    for t, s, j in zip(ref_topics, share, jacc.mean(axis=0))],
         "stability_mean_jaccard": float(jacc.mean()),
@@ -336,13 +343,15 @@ def write_tables():
         "NPromptRows": f"{f['prompt_rows']:,}",
         "PctPromptRows": f"{100*f['prompt_rows']/f['raw_rows']:.1f}",
         "ArtistRuleRatio": f"{q2['artist_lenient_pct']/q2['artist_strict_pct']:.1f}",
-        "NBoosters": str(len(F.BOOSTERS)),
+        "NBoosters": str(len(prompt_utils.BOOSTERS)),
         "MedianWordsParam": f"{q4['h1']['median_param']:.0f}",
         "MedianWordsNoParam": f"{q4['h1']['median_no_param']:.0f}",
         "HTwoChi": f"{q4['h2']['chi2']:.1f}",
         "PctBoostIfArtist": f"{q4['h2']['boost_pct_if_artist']:.1f}",
         "PctBoostIfNoArtist": f"{q4['h2']['boost_pct_if_no_artist']:.1f}",
-        "MinTopicJaccard": f"{min(t['jaccard'] for t in q3['topics']):.2f}",
+        "NTopicUnassigned": f"{q3['unassigned_docs']:,}",
+        "PctTopicUnassigned": f"{q3['unassigned_pct']:.1f}",
+        "MinTopicJaccard":f"{min(t['jaccard'] for t in q3['topics']):.2f}",
     }
     (TABLES / "numbers.tex").write_text(
         "% Generated by analysis/pipeline.py -- do not edit by hand.\n"
@@ -385,7 +394,7 @@ def write_figures(c: pd.DataFrame):
 
     fig, ax = plt.subplots(figsize=(3.4, 1.9))
     w = c["n_words"].clip(upper=100)
-    ax.hist(w, bins=range(F.MIN_CONTENT_WORDS, 102, 2), color=SERIES,
+    ax.hist(w, bins=range(prompt_utils.MIN_CONTENT_WORDS, 102, 2), color=SERIES,
             edgecolor="white", linewidth=0.5)
     ax.axvline(R["rq1"]["words_median"], color=INK, linewidth=1, linestyle="--")
     ax.text(R["rq1"]["words_median"], ax.get_ylim()[1] * 0.92,
@@ -418,7 +427,7 @@ def main():
     log("1 load");     df = load()
     log("2 audit");    df = audit(df)
     df[["split", "text"]].to_csv(HERE / "data" / "midjourney_prompts_all.csv", index=False)
-    log("3 corpus");   c = corpus(df)
+    log("3 build");   c = build_analysis_dataset(df)
     log("4 rq1");      rq1(c)
     log("5 rq2");      rq2(c)
     log("6 rq3");      rq3(c)
