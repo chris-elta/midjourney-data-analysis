@@ -53,8 +53,8 @@ prompts from the Midjourney Discord server twice: once with a generative AI
 tool given only the data and a fixed sequence of questions, and once with a
 scripted Python pipeline. Our pipeline found that \PctNonPrompt\% of rows
 are not prompts and \PctDupRows\% are exact duplicates, and that
-\PctTestLeak\% of test rows also appear in the training split. On the
-de-duplicated corpus of \NCorpus{} prompts we report prompt structure,
+\PctTestInTrain\% of test rows also appear in the training split. On the
+\NCleanPrompts{} clean prompts (repeats removed) we report prompt structure,
 artist references, quality-booster phrases and topics. \todo{One or two
 sentences on how the AI analysis compared, and the main lesson.}
 \end{abstract}
@@ -149,9 +149,9 @@ quoted and checked.
   \item \textit{Duplicates} are found after lower-casing and collapsing
         whitespace. The first copy is kept.
 \end{itemize}
-Because \PctTestLeak\% of test rows already appear in train, the provided
+Because \PctTestInTrain\% of test rows already appear in train, the provided
 splits are not meaningful for descriptive analysis. We pool all splits and
-de-duplicate, giving an analytic corpus of \NCorpus{} prompts
+remove repeated prompts, leaving \NCleanPrompts{} clean prompts
 (Table~\ref{tab:flow}).
 
 \begin{table}[t]
@@ -163,7 +163,7 @@ de-duplicate, giving an analytic corpus of \NCorpus{} prompts
 
 \begin{table}[t]
 \centering
-\caption{From raw rows to analytic corpus.}
+\caption{From raw rows to clean prompts.}
 \label{tab:flow}
 \input{tables/flow}
 \end{table}
@@ -205,7 +205,7 @@ words.
 \textit{RQ4} tests H1 (prompts with any parameter are longer) with a
 Mann--Whitney $U$ test and rank-biserial correlation, and H2 (artist
 references are associated with booster phrases) with a $\chi^2$ test and
-Cram\'er's $V$. With $n=\NCorpus$, almost any difference is
+Cram\'er's $V$. With $n=\NCleanPrompts$, almost any difference is
 significant, so we interpret effect sizes, not $p$-values.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,7 +224,7 @@ subsections give our pipeline's results and then the AI tool's.
 Question & Measure & AI tool (run A) & Our pipeline \\
 \midrule
 Data quality & Exact duplicate rows & \todo{} & \NDupRows{} (\PctDupRows\%) \\
-             & Test rows also in train & \todo{} & \PctTestLeak\% \\
+             & Test rows also in train & \todo{} & \PctTestInTrain\% \\
 RQ1 & Median content words (IQR) & \todo{} & \MedianWords{} (\IQRWords) \\
     & Prompts using any parameter & \todo{} & \PctAnyParam\% \\
     & Prompts using \texttt{--ar} & \todo{} & \PctAspect\% \\
@@ -243,13 +243,13 @@ aspect ratios such as \texttt{16:9}, numbers, lone parameters such as
 \texttt{--uplight}, and one- or two-word fragments
 (Table~\ref{tab:fragments}). The median raw row is \MedianChars{}
 characters long. \NDupRows{} rows (\PctDupRows\%) are exact duplicates of
-an earlier row, and \PctTestLeak\% of test rows (\PctTestPromptLeak\% of
+an earlier row, and \PctTestInTrain\% of test rows (\PctTestPromptsInTrain\% of
 test rows that are real prompts) also appear in train. A model trained and
 evaluated on these splits would be tested largely on data it had already
 seen \cite{leeDeduplicating2022}.
 
 \subsection{RQ1: Prompt Structure}
-Corpus prompts have a median of \MedianWords{} content words (IQR
+Clean prompts have a median of \MedianWords{} content words (IQR
 \IQRWords), with a long right tail (Fig.~\ref{fig:length}).
 \PctAnyParam\% use at least one parameter; aspect ratio is by far the most
 common (\PctAspect\%), led by 16:9 and 9:16 (Fig.~\ref{fig:params}).
@@ -259,14 +259,14 @@ lists of descriptors rather than sentences.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/length}
-\caption{Content words per corpus prompt.}
+\caption{Content words per clean prompt.}
 \label{fig:length}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/params}
-\caption{Share of corpus prompts using each parameter.}
+\caption{Share of clean prompts using each parameter.}
 \label{fig:params}
 \end{figure}
 
@@ -324,7 +324,7 @@ and did it reproduce the tool's own numbers?}
 
 \subsection{Interpretation}
 \todo{What the two analyses agree on, where they differ, and why. Tie each
-difference to a specific decision: fragment rule, de-duplication, artist
+difference to a specific decision: fragment rule, removing repeats, artist
 rule, topic model and $k$, choice of test.}
 
 \subsection{Validity}

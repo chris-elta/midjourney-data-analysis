@@ -30,7 +30,7 @@
       "symbols_only": 1376
     },
     "url_rows": 1268,
-    "leakage": {
+    "split_overlap": {
       "validation": {
         "all_rows_in_train": 0.8421009904205228,
         "prompt_rows_in_train": 0.6993606998654105
@@ -46,7 +46,7 @@
     "excluded_non_prompt": 126024,
     "prompt_rows": 120357,
     "excluded_duplicates": 62687,
-    "corpus": 57670,
+    "clean_prompts": 57670,
     "min_content_words": 3
   },
   "rq1": {

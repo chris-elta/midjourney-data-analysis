@@ -99,7 +99,7 @@ def content_words(text: str):
 
 
 def fragment_type(text: str) -> str:
-    """Classify a row. Anything other than 'prompt' is excluded from the corpus.
+    """Classify a row. Anything other than 'prompt' is excluded from the clean prompts.
 
     Order matters: the first matching rule wins.
     """
