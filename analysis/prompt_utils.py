@@ -126,7 +126,13 @@ MIN_CONTENT_WORDS = 3
 
 
 def artists(text: str, mode: str = "lenient"):
-    """Return the artist / style names referenced in a prompt (lower-cased)."""
+    """Return the artist / style names referenced in a prompt (lower-cased).
+
+    Works on the content text, so a trailing parameter or :: weight is not
+    read as part of a name ("by ashley wood --ar 9:16" is "ashley wood",
+    not "ashley wood ar").
+    """
+    text = content_text(text)
     if mode == "strict":
         names = [m.strip() for m in ARTIST_STRICT_RE.findall(text)]
     else:

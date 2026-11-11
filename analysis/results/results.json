@@ -95,25 +95,25 @@
     }
   },
   "rq2": {
-    "artist_strict_pct": 14.380093636205999,
-    "artist_lenient_pct": 24.333275533206173,
-    "artist_distinct_lenient": 4557,
+    "artist_strict_pct": 14.395699670539274,
+    "artist_lenient_pct": 24.335009537020984,
+    "artist_distinct_lenient": 4267,
     "artist_top": {
-      "craig mullins": 345,
-      "peter mohrbacher": 247,
-      "hajime sorayama": 192,
+      "craig mullins": 409,
+      "ashley wood": 270,
+      "peter mohrbacher": 254,
+      "hajime sorayama": 195,
       "sarah morris": 186,
       "wlop": 174,
-      "artgerm": 168,
-      "hokusai": 165,
-      "annie leibovitz": 160,
-      "charlie bowater": 151,
-      "ashley wood": 150,
+      "studio ghibli": 167,
+      "hokusai": 164,
+      "artgerm": 163,
+      "stefan gesell": 159,
+      "charlie bowater": 152,
       "miyazaki": 142,
-      "studio ghibli": 137,
-      "tsutomu nihei": 132,
-      "stefan gesell": 132,
-      "james jean": 131
+      "emil melmoth": 141,
+      "james jean": 139,
+      "tsutomu nihei": 132
     },
     "booster_any_pct": 36.219871683717706,
     "booster_pct": {
@@ -317,20 +317,20 @@
     "h2": {
       "table": [
         [
-          28755,
-          14882
+          28748,
+          14888
         ],
         [
-          8027,
-          6006
+          8034,
+          6000
         ]
       ],
-      "chi2": 347.50845174387734,
+      "chi2": 342.71904140990307,
       "dof": 1,
-      "p": 1.4781380609628775e-77,
-      "cramers_v": 0.07762608975093628,
-      "boost_pct_if_artist": 42.79911636855982,
-      "boost_pct_if_no_artist": 34.10408598207943
+      "p": 1.6319941259098313e-76,
+      "cramers_v": 0.07708930698950714,
+      "boost_pct_if_artist": 42.75331338178709,
+      "boost_pct_if_no_artist": 34.118617655147126
     }
   }
 }
