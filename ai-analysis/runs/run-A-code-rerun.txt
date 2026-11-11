@@ -1,0 +1,103 @@
+# Output of run-A-code.py, re-run unchanged on 2026-11-11 (Python 3.8.20, pinned packages
+# from analysis/requirements.txt) against midjourney_prompts_all.csv (SHA-256 582e6d09...4806).
+
+VERSIONS numpy 1.24.4 scipy 1.10.1 scikit-learn 1.3.2
+
+DATA QUALITY
+ROWS 246381 SPLITS Counter({'train': 221743, 'test': 12320, 'validation': 12318})
+CATEGORIES Counter({'not_flagged': 183567, 'ratio': 34993, 'parameter_only': 13757, 'number': 12467, 'empty': 1597})
+EXACT_UNIQUE 65398 DUPLICATE_EXTRA 180983 ROWS_IN_DUP_GROUPS 208436 DUPLICATE_GROUPS 27453
+NORMALIZED_UNIQUE 65112 DUPLICATE_EXTRA 181269
+TOP_REPEATED [('16:9', 12470), ('--uplight', 9969), ('9:16', 4662), ('2:3', 2479), ('1920', 2054), ('render', 1851), ('', 1597), ('3:4', 1424), ('1', 1391), ('4:5', 1082)]
+NONEMPTY 244784 EXACT_UNIQUE 65397 DUPLICATE_EXTRA 179387
+NONEMPTY_WORDLIKE mean 10.673920681090268 median 3.0 p10 1 p90 30 at_most_five 135106
+NONEMPTY_CHARS mean 66.64375939603896 median 16.0 p90 194
+LONG_ROWS 109678 TOP_REPEATED [('cute furry monster in Pixar with star, colorful, volumetric lighting, 4k, photorealistic', 736), ('a futuristic simulacrum witnessing itself in a white laboratory', 220), ('a close up of a simulacrum in a morbid detailed apocalyptic futuristic white laboratory in the style of tsutomu nihei dark cinematic moody scary', 134), ('cute furry monster in Pixar with star, Diablo series, angry, colorful, volumetric lighting, 4k, photorealistic', 128), ('cute furry monster in Pixar with star, angry, colorful, volumetric lighting, 4k, photorealistic', 127), ('a simulacrum in a morbid detailed apocalyptic futuristic white laboratory in the style of tsutomu nihei and otomo dark cinematic moody scary manga', 108), ('cute furry monster in Pixar with star, colorful,volumetric lighting, 4k, photorealistic', 106), ('a beautiful composition of a glowing psychedelic spirit animal shaman walking through a waterfall towards a portal on the other side visible through the waterfall, at night during a lantern festival, DMT,  rich details full of texture, style by Mœbius and Katsuhiro Otomo and Pogo —ar 12:16 —test', 92), ('polaroid of a mysterious figure ina black flowing in the wind cloak in a detailed dark brutalist liminal space in the style of floria sigismondi and matt mahurin and robert mapplethorpe cinematic depth moody dark film emulsion photograph', 84), ('grotesque fantastical futurist detailed mechanical japanese alice in wonderland dark and moody liminal space dark spooky forest in the style of floria sigismondi and robert mapplethorpe and tim walker and tsutomu nihei', 83)]
+NOT_FLAGGED_ONE_WORDLIKE 51872 AT_MOST_ONE_WORDLIKE 52970
+OVERLAP all validation rows 12318 matching_rows 10365 unique 7013 matching_unique 5092
+OVERLAP all test rows 12320 matching_rows 10239 unique 7150 matching_unique 5114
+OVERLAP nonempty validation rows 12228 matching_rows 10275 unique 7012 matching_unique 5091
+OVERLAP nonempty test rows 12249 matching_rows 10168 unique 7149 matching_unique 5113
+OVERLAP not_flagged validation rows 9154 matching_rows 7208 unique 6773 matching_unique 4857
+OVERLAP not_flagged test rows 9275 matching_rows 7199 unique 6906 matching_unique 4875
+OVERLAP six_wordlike validation rows 5423 matching_rows 3850 unique 4878 matching_unique 3330
+OVERLAP six_wordlike test rows 5516 matching_rows 3851 unique 4981 matching_unique 3353
+
+CLEANED DISTINCT TEXTS 64907
+WHITESPACE_LENGTH mean 15.92883664319719 median 12 p25 6 p75 21 one_item 5127
+SIX_WORDLIKE 51451 median_whitespace_length 15
+DESCRIPTIVE clean {'cinematic': 6240, 'style of': 4530, 'octane render': 4452, 'portrait(s)': 3196, 'highly detailed': 2723, 'unreal engine': 2338, 'trending on artstation': 2130, 'photorealistic': 1953, 'Craig Mullins': 1283, 'Peter Mohrbacher': 963}
+DESCRIPTIVE six_wordlike {'cinematic': 6205, 'style of': 4525, 'octane render': 4434, 'portrait(s)': 3096, 'highly detailed': 2715, 'unreal engine': 2333, 'trending on artstation': 2125, 'photorealistic': 1896, 'Craig Mullins': 1280, 'Peter Mohrbacher': 961}
+PARAMETERS [('ar', 17946), ('h', 3402), ('w', 3389), ('uplight', 3108), ('aspect', 2716), ('no', 2343), ('wallpaper', 756), ('stop', 738), ('hd', 668), ('test', 663), ('iw', 201), ('seed', 166), ('fast', 150), ('vibe', 117), ('style', 95), ('lp', 88), ('video', 79), ('ll', 78), ('ml', 47), ('vertical', 35), ('mp', 33), ('zineq', 29), ('greg', 14), ('vibefast', 14), ('land', 8), ('a2', 7), ('w2400', 6), ('h1200', 6), ('sameseed', 6), ('h1334', 6), ('w750', 6), ('upligh', 5), ('tes', 5), ('w2000', 4), ('asp', 4), ('h1000', 3), ('h1280', 3), ('card', 2), ('h2000', 2), ('sp', 2), ('w400', 2), ('w1600', 2), ('i', 1), ('w1920', 1), ('wass', 1), ('w1280', 1), ('h1600', 1)]
+ANY_PARAMETER 27371 W_OR_H 3848 W_AND_H 2943
+ASPECT_RATIOS rows 20662 multiple_rows 19 orientation Counter({'landscape': 11206, 'portrait': 9339, 'square': 117}) top [('16:9', 6789), ('9:16', 2475), ('2:3', 1508), ('4:5', 819), ('16:8', 693), ('3:4', 602), ('11:17', 539), ('3:2', 471), ('2:1', 436), ('4:3', 388), ('7:5', 387), ('21:9', 341), ('1:2', 242), ('5:7', 220), ('4:6', 208), ('3:1', 202), ('8:13', 195), ('9:20', 176), ('9:21', 169), ('9:19', 159)]
+
+ARTISTS AND QUALITY PHRASES
+ARTISTS 8786 STYLE_PHRASE 3689 BOTH 1435 UNION 11040
+ARTIST_COUNTS [('Craig Mullins', 1283), ('Peter Mohrbacher', 963), ('Alphonse Mucha', 817), ('H. R. Giger', 678), ('Mœbius', 573), ('James Jean', 516), ('Artgerm', 515), ('James Gurney', 423), ('Ashley Wood', 401), ('Zdzisław Beksiński', 392), ('Ross Tran', 386), ('Marc Simonetti', 344), ('WLOP', 309), ('Greg Rutkowski', 301), ('Ansel Adams', 296), ('Hokusai', 289), ('Charlie Bowater', 267), ('Emil Melmoth', 265), ('Yoji Shinkawa', 225), ('Tsutomu Nihei', 221), ('Wes Anderson', 206), ('Norman Rockwell', 204), ('Thomas Kinkade', 200), ('Hajime Sorayama', 199), ('Tom Bagshaw', 196), ('Sarah Morris', 188), ('Annie Leibovitz', 173), ('Stefan Gesell', 171), ('Jean-Michel Basquiat', 157), ('Gustave Doré', 154), ('Katsuhiro Otomo', 145), ('Syd Mead', 144), ('Makoto Shinkai', 142), ('Yoshitaka Amano', 141), ('Filip Hodas', 132), ('Karel Thole', 125), ('Hayao Miyazaki', 120), ('Joel Meyerowitz', 117), ('Vincent van Gogh', 117), ('Beeple', 115), ('Tim Burton', 112), ('Renato Muccillo', 99), ('Robert Mapplethorpe', 90), ('Tim Walker', 84), ('Yousuf Karsh', 84), ('Andrei Riabovitchev', 83), ('Floria Sigismondi', 75), ('Jean-Honoré Fragonard', 73), ('Kilian Eng', 66), ('Harumi Hironaka', 65)]
+QUALITY_COUNTS {'trending on artstation': 2130, '8k': 5915, 'octane render': 4452, 'highly detailed': 2723, '4k': 3162, 'unreal engine': 2338}
+QUALITY_FIRST_THREE_UNION 9948
+QUALITY_ALL_SIX_UNION 14119
+
+TOPIC MODEL
+MODELED 61246 NO_FEATURES 3661 VOCAB 4430
+FIT 0 iterations 132 error 241.15915667312495 warnings []
+TOPIC 0 0 count 8375 words render,realistic,octane,hyper,unreal,engine,ultra,photo,high,artstation,post,alien
+TOPIC 0 1 count 5693 words painting,oil,matte,abstract,beautiful,battle,hyperrealistic,cgsociety,large,mecha,realistic,space
+TOPIC 0 2 count 5372 words detailed,highly,intricate,hyper,cgsociety,alien,insanely,ornate,sci,artstation,blue,golden
+TOPIC 0 3 count 5179 words art,concept,vector,fantasy,digital,psychedelic,circa,pulp,symmetrical,magazine,flat,centered
+TOPIC 0 4 count 6782 words portrait,beautiful,artstation,character,face,girl,trending,wood,woman,ashley,hair,body
+TOPIC 0 5 count 1304 words clay,shot,length,cute,race,sculpture,man,king,animation,dinosaur,photorealistic,wide
+TOPIC 0 6 count 7862 words black,white,photo,background,red,ink,paper,photograph,illustration,card,old,wearing
+TOPIC 0 7 count 577 words artwork,van,john,peter,mike,robert,david,shinkawa,yoji,james,paul,hans
+TOPIC 0 8 count 7230 words style,anime,ghibli,pixar,poster,design,mullins,basquiat,jean,giger,craig,game
+TOPIC 0 9 count 12872 words cinematic,lighting,dark,light,epic,city,high,dramatic,shot,wide,photorealistic,angle
+FIT 1 iterations 197 error 241.05313409102695 warnings []
+TOPIC 1 0 count 5818 words realistic,hyper,photo,ultra,old,realism,view,detailed,photograph,super,epic,grotty
+TOPIC 1 1 count 5574 words art,concept,vector,fantasy,digital,psychedelic,circa,pulp,symmetrical,magazine,flat,centered
+TOPIC 1 2 count 7330 words portrait,beautiful,artstation,character,face,girl,trending,wood,woman,ashley,hair,body
+TOPIC 1 3 count 9396 words black,white,background,red,photo,ink,paper,illustration,photograph,card,wearing,tarot
+TOPIC 1 4 count 580 words artwork,van,john,peter,mike,robert,david,shinkawa,yoji,james,paul,hans
+TOPIC 1 5 count 4904 words painting,oil,matte,abstract,beautiful,battle,hyperrealistic,cgsociety,large,mecha,space,trending
+TOPIC 1 6 count 13200 words cinematic,lighting,dark,light,city,epic,shot,dramatic,high,wide,photorealistic,angle
+TOPIC 1 7 count 5735 words style,anime,ghibli,pixar,poster,design,mullins,basquiat,jean,giger,craig,game
+TOPIC 1 8 count 4041 words render,octane,unreal,engine,artstation,high,alien,photorealistic,blue,post,yellow,cyberpunk
+TOPIC 1 9 count 4668 words detailed,highly,intricate,cgsociety,alien,artstation,ornate,sci,insanely,blue,golden,yellow
+FIT 2 iterations 261 error 241.0863513778248 warnings []
+TOPIC 2 0 count 8160 words render,octane,unreal,engine,high,photorealistic,alien,blue,cyberpunk,yellow,space,ultra
+TOPIC 2 1 count 6356 words painting,oil,matte,beautiful,abstract,space,battle,hyperrealistic,cgsociety,large,mecha,landscape
+TOPIC 2 2 count 5052 words art,concept,vector,fantasy,digital,circa,psychedelic,pulp,symmetrical,magazine,flat,miyazaki
+TOPIC 2 3 count 583 words artwork,van,john,peter,mike,robert,david,shinkawa,yoji,paul,james,hans
+TOPIC 2 4 count 4538 words realistic,hyper,photo,ultra,old,realism,epic,view,detailed,photography,high,super
+TOPIC 2 5 count 9667 words black,white,background,red,ink,photo,paper,illustration,dark,card,photograph,tarot
+TOPIC 2 6 count 5975 words portrait,face,beautiful,character,girl,woman,hair,man,symmetrical,body,wood,ashley
+TOPIC 2 7 count 8867 words detailed,cinematic,highly,lighting,intricate,dark,dramatic,shot,epic,cgsociety,wide,insanely
+TOPIC 2 8 count 7526 words style,anime,ghibli,poster,city,pixar,studio,basquiat,jean,mullins,giger,japanese
+TOPIC 2 9 count 4522 words artstation,trending,design,craig,beautiful,mullins,concept,game,mucha,high,girl,wood
+STABILITY 1 mean_cosine 0.8817150391254354 min_cosine 0.005357467326112251 mean_top10_jaccard 0.8246753246753247 min_top10_jaccard 0.0 assignment_agreement 0.8120367044378408
+MATCH 1 0 8 cosine 0.819085847864288 jaccard 0.42857142857142855 reference_share 0.13674362407340887 rerun_share 0.0659798190902263
+MATCH 1 1 5 cosine 0.9990938432667179 jaccard 1.0 reference_share 0.09295300917610946 rerun_share 0.08007053521862652
+MATCH 1 2 9 cosine 0.9979476114732173 jaccard 0.8181818181818182 reference_share 0.08771185056983313 rerun_share 0.07621722234921464
+MATCH 1 3 1 cosine 0.9999702047017677 jaccard 1.0 reference_share 0.08456062436730562 rerun_share 0.09101002514449923
+MATCH 1 4 2 cosine 0.9995355703757237 jaccard 1.0 reference_share 0.11073376220487868 rerun_share 0.11968128530842831
+MATCH 1 5 0 cosine 0.005357467326112251 jaccard 0.0 reference_share 0.021291186363191064 rerun_share 0.09499395878914542
+MATCH 1 6 3 cosine 0.9988001080695122 jaccard 1.0 reference_share 0.12836756686150932 rerun_share 0.15341410051268653
+MATCH 1 7 4 cosine 0.9999994988247376 jaccard 1.0 reference_share 0.00942102341377396 rerun_share 0.009470006204486823
+MATCH 1 8 7 cosine 0.9999856183837211 jaccard 1.0 reference_share 0.11804852561799954 rerun_share 0.09363876824608953
+MATCH 1 9 6 cosine 0.9973746209685561 jaccard 1.0 reference_share 0.21016882735199033 rerun_share 0.21552427913659666
+STABILITY 2 mean_cosine 0.7588369421272452 min_cosine 0.006620941951629825 mean_top10_jaccard 0.5185748462064251 min_top10_jaccard 0.0 assignment_agreement 0.6053783104202723
+MATCH 2 0 0 cosine 0.8129525823347292 jaccard 0.3333333333333333 reference_share 0.13674362407340887 rerun_share 0.13323319073898704
+MATCH 2 1 1 cosine 0.9974371920256141 jaccard 0.8181818181818182 reference_share 0.09295300917610946 rerun_share 0.10377820592365215
+MATCH 2 2 7 cosine 0.7657937931713378 jaccard 0.25 reference_share 0.08771185056983313 rerun_share 0.1447768017503184
+MATCH 2 3 2 cosine 0.9959301263732392 jaccard 1.0 reference_share 0.08456062436730562 rerun_share 0.08248701956046109
+MATCH 2 4 6 cosine 0.890712739112267 jaccard 0.42857142857142855 reference_share 0.11073376220487868 rerun_share 0.09755739150311857
+MATCH 2 5 4 cosine 0.006620941951629825 jaccard 0.0 reference_share 0.021291186363191064 rerun_share 0.07409463475165726
+MATCH 2 6 5 cosine 0.9938576453505282 jaccard 0.8181818181818182 reference_share 0.12836756686150932 rerun_share 0.15783887927374848
+MATCH 2 7 3 cosine 0.9999977855416681 jaccard 0.8181818181818182 reference_share 0.00942102341377396 rerun_share 0.009518988995199687
+MATCH 2 8 8 cosine 0.9963604153059478 jaccard 0.6666666666666666 reference_share 0.11804852561799954 rerun_share 0.12288149430166868
+MATCH 2 9 9 cosine 0.12870620010549072 jaccard 0.05263157894736842 reference_share 0.21016882735199033 rerun_share 0.07383339320118865
+
+HYPOTHESIS TESTS
+H1_FULL n 27371 37536 means 23.111249132293302 10.691469522591646 medians 19.0 8.0 U 820121638.0 log10_p -3676.7812918563804 probability_superiority 0.7982512647953199 rank_biserial 0.5965025295906399
+H1_WITHOUT_OPTIONS n 27371 37536 means 20.611742355047312 10.691469522591646 medians 17.0 8.0 U 763579147.5 log10_p -2446.3580206121983 probability_superiority 0.7432166059532832 rank_biserial 0.4864332119065664
+H2_TABLE [[3502, 5284], [10617, 45504]] chi2 1957.1775201587254 df 1 log10_p -426.73979521859593 odds_ratio 2.840541182827278 or_95ci [2.708371102339983, 2.9791612398930876] rates 0.3985886637832916 0.18918052066071525 risk_difference 0.20940814312257636 risk_ratio 2.106922332126034

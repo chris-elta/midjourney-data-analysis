@@ -133,7 +133,7 @@ downloaded the Parquet files on 6 Nov.\ 2026 and recorded their SHA-256
 hashes (Appendix~\ref{app:repro}).
 
 \subsection{Preprocessing}
-All rules are defined in one file (\texttt{features.py}) so they can be
+All rules are defined in one file (\texttt{prompt\_utils.py}) so they can be
 quoted and checked.
 \begin{itemize}
   \item \textit{Parameters} are tokens of the form \texttt{--name value}.
@@ -198,14 +198,18 @@ advice (e.g.\ ``trending on artstation'', ``8k'', ``octane render'').
 \textit{RQ3} fits a TF-IDF representation (minimum document frequency 20,
 English stop words removed) and non-negative matrix factorisation (NMF)
 \cite{leeSeungNMF1999} with $k=10$ topics. To test stability, we refit on
-five random 80\% subsamples with random initialisation, match topics to
-the reference run, and report the Jaccard overlap $J$ of their top ten
-words.
+five random 80\% subsamples, each started from the same SVD-based
+initialisation as the reference model (NNDSVDar), match topics to the
+reference run, and report the Jaccard overlap $J$ of their top ten words.
+% NOTE: this tests sensitivity to the sample only. On the full data,
+% changing the seed with NNDSVDar gives J = 1.00 every time. With a fully
+% random start (init="random") mean J drops from 0.81 to about 0.62.
+% Decide whether to report that as well; see the comment in pipeline.py rq3().
 
 \textit{RQ4} tests H1 (prompts with any parameter are longer) with a
 Mann--Whitney $U$ test and rank-biserial correlation, and H2 (artist
-references are associated with booster phrases) with a $\chi^2$ test and
-Cram\'er's $V$. With $n=\NCleanPrompts$, almost any difference is
+references, under the lenient rule, are associated with booster phrases)
+with a $\chi^2$ test and Cram\'er's $V$. With $n=\NCleanPrompts$, almost any difference is
 significant, so we interpret effect sizes, not $p$-values.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -274,9 +278,10 @@ lists of descriptors rather than sentences.
 The share of prompts naming an artist is \PctArtistStrict\% under the
 strict rule and \PctArtistLenient\% under the lenient rule: the rule alone
 changes the answer by a factor of \ArtistRuleRatio. The most-cited names are concept and
-fantasy illustrators such as Craig Mullins and Peter Mohrbacher
+fantasy illustrators such as \TopArtistOne{} and \TopArtistTwo{}
 (Fig.~\ref{fig:artists}). \PctBoosterAny\% of prompts use at least one
-booster phrase, most often ``cinematic'', ``8k'' and ``octane render''.
+booster phrase, most often ``\TopBoosterOne'', ``\TopBoosterTwo'' and
+``\TopBoosterThree''.
 \todo{Decide whether to include figures/boosters.pdf or keep it to text.}
 
 \begin{figure}[t]

@@ -126,7 +126,14 @@ MIN_CONTENT_WORDS = 3
 
 
 def artists(text: str, mode: str = "lenient"):
-    """Return the artist / style names referenced in a prompt (lower-cased)."""
+    """Return the artist / style names referenced in a prompt (lower-cased).
+
+    Parameters are replaced by a comma first, so one that follows a name
+    ends the name instead of joining it ("by ashley wood --ar 9:16" is
+    "ashley wood", not "ashley wood ar"). The :: weights stay in the text,
+    because the colon already ends a name.
+    """
+    text = PARAM_RE.sub(" , ", URL_RE.sub(" ", text))
     if mode == "strict":
         names = [m.strip() for m in ARTIST_STRICT_RE.findall(text)]
     else:

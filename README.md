@@ -24,7 +24,7 @@ cd part1-paper && latexmk -pdf COMP9200_A3_Part1_Paper.tex
 Other packages are pinned in `analysis/requirements.txt`. The pipeline writes
 `analysis/results/`, `part1-paper/tables/` (including `numbers.tex`, the
 macros used in the paper's text) and `part1-paper/figures/`. Never edit those
-by hand; change `analysis/features.py` or `analysis/pipeline.py` and re-run.
+by hand; change `analysis/prompt_utils.py` or `analysis/pipeline.py` and re-run.
 
 ## What's left to do
 
@@ -37,12 +37,12 @@ by hand; change `analysis/features.py` or `analysis/pipeline.py` and re-run.
    `analysis/validity/handcheck.csv` on their own (columns `*_r1` / `*_r2`),
    then re-run section 7 of `analysis/explore.ipynb` for precision, recall
    and Cohen's kappa. Report it in Discussion > Validity.
+4. **Part 2:** write the methodology draft in
+   `part2-methodology/` (skeleton only).
 
 `analysis/explore.ipynb` shows example rows behind every cleaning step and
 research question. It never writes the paper's numbers; run it with
 *Restart & Run All* before submitting so its saved outputs are current.
-4. **Part 2:** write the methodology draft in
-   `part2-methodology/` (skeleton only).
 
 ## LaTeX setup
 
