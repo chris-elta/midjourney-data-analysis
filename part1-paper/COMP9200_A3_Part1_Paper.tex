@@ -198,11 +198,12 @@ advice (e.g.\ ``trending on artstation'', ``8k'', ``octane render'').
 \textit{RQ3} fits a TF-IDF representation (minimum document frequency 20,
 English stop words removed) and non-negative matrix factorisation (NMF)
 \cite{leeSeungNMF1999} with $k=10$ topics. To test stability, we refit on
-five random 80\% subsamples, each with a different seed and a perturbed
-copy of the reference initialisation (NNDSVDar), match topics to the
+five random 80\% subsamples, each started from the same SVD-based
+initialisation as the reference model (NNDSVDar), match topics to the
 reference run, and report the Jaccard overlap $J$ of their top ten words.
-% NOTE: this varies the sample much more than the starting point. With a
-% fully random start (init="random") mean J drops from 0.81 to about 0.62.
+% NOTE: this tests sensitivity to the sample only. On the full data,
+% changing the seed with NNDSVDar gives J = 1.00 every time. With a fully
+% random start (init="random") mean J drops from 0.81 to about 0.62.
 % Decide whether to report that as well; see the comment in pipeline.py rq3().
 
 \textit{RQ4} tests H1 (prompts with any parameter are longer) with a

@@ -217,10 +217,12 @@ def rq3(c: pd.DataFrame):
 
     # Stability: refit on random 80% subsamples with a different seed, match
     # each run's topics to the reference (Hungarian on Jaccard), and report
-    # how much the top words overlap. The refits use init="nndsvdar", which is
-    # the reference's NNDSVD start with small random values in place of zeros,
-    # so this measures sensitivity to the sample far more than to the starting
-    # point. A fully random start (init="random") is a harsher test.
+    # how much the top words overlap. The refits use init="nndsvdar": the same
+    # SVD-based start as the reference, computed on the subsample, with small
+    # random values in place of zeros. The seed barely matters with it (on the
+    # full data, changing only the seed gives J = 1.00), so this measures
+    # sensitivity to the sample, not to the starting point. A fully random
+    # start (init="random") is a harsher test: mean J is about 0.62.
     rng = np.random.default_rng(SEED)
     jacc = np.zeros((N_STABILITY_RUNS, N_TOPICS))
     for r in range(N_STABILITY_RUNS):
