@@ -1,5 +1,6 @@
 # Downloaded data and local packages (re-create with fetch_data.py / pip).
 analysis/.deps/
+.venv/
 analysis/data/raw/*.parquet
 analysis/data/*.csv
 __pycache__/
