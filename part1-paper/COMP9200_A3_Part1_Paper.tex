@@ -350,7 +350,8 @@ of its rows were a single item; these short rows rarely carry parameters,
 which lowers its parameter shares. The top aspect ratios agree (16:9, 9:16,
 2:3). For artists (P3) it mined names after cues such as ``in the style
 of'' and then searched a fixed list of 50; the mining output was not kept,
-so the list cannot be traced to a rule. It found 13.5\%, inside the pipeline's strict--lenient range, with the same top name (\TopArtistOne). Its six booster phrases
+so the list cannot be traced to a rule. It found 13.5\%, just below the pipeline's strict rule (\PctArtistStrict\%),
+with the same top name (\TopArtistOne). Its six booster phrases
 (three from the prompt, three its own) found 21.8\%. For topics (P4) it chose the pipeline's method and settings (TF-IDF, NMF, $k=10$) and
 found nearly the same topics, down to a 0.9\% topic of artists' first names; two reruns gave
 matched cosine similarity 0.88 and 0.76, which it called ``not highly
