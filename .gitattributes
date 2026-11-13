@@ -1,0 +1,5 @@
+# Hashed data files: store and check out byte-for-byte, so the SHA-256
+# values in MANIFEST.json and the paper still match on Windows checkouts.
+ai-analysis/data/** -text
+analysis/data/** -text
+*.parquet binary

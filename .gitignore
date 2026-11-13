@@ -15,3 +15,7 @@ __pycache__/
 *.out
 *.synctex.gz
 *.toc
+# Empty temp files left by LaTeX builds in the Linux VM
+tmp*.tmp
+# Submission bundle
+*.zip

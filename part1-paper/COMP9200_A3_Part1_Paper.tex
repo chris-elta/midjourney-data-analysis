@@ -26,6 +26,7 @@
 
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 \input{tables/numbers}
+\input{tables/validity}
 
 \title{Same Data, Two Analysts: Comparing Generative AI Tools with a
 Scripted Pipeline on Midjourney Prompts}
@@ -109,14 +110,15 @@ and Oppenlaender proposed a taxonomy of prompt modifiers such as style and
 quality boosters \cite{oppenlaenderTaxonomyPromptModifiers2023}. Large
 prompt collections such as DiffusionDB \cite{wangDiffusionDB2023} and
 prompt-log studies \cite{xiePromptLogAnalysis2023} describe how users write
-prompts in practice. % VERIFY both sentences below against the papers.
-Both describe prompts as lists of subject and style keywords with frequent
-reuse of the same modifiers, which RQ1 and RQ2 measure directly.
+prompts in practice.
+Both describe prompts as blocks of subject and style terms, with the same
+style terms and artist names (e.g.\ ``highly detailed'', ``artstation'')
+recurring across many prompts, which RQ1 and RQ2 measure directly.
 
 \textit{AI as data analyst.} Cheng et al.\ evaluated GPT-4 as a data
-analyst \cite{chengGPT4GoodData2023} and found its output comparable to
-human analysts on several criteria, but with errors in data handling and
-reasoning that a reader could not see without checking the work.
+analyst \cite{chengGPT4GoodData2023}: it matched or beat junior analysts on most
+criteria but trailed senior analysts, and it stated calculation errors in
+a confident tone, so they came to light only when the work was checked.
 
 \textit{Analytic flexibility and data quality.} Silberzahn et al.\ showed
 that independent analysts given the same data reach different conclusions
@@ -156,8 +158,10 @@ quoted and checked.
   \item \textit{Duplicates} are found after lower-casing and collapsing
         whitespace. The first copy is kept.
 \end{itemize}
-Because the provided splits overlap (Section~\ref{sec:quality}), the splits are pooled and repeated prompts removed, leaving \NCleanPrompts{} clean prompts
-(Table~\ref{tab:flow}).
+Because the provided splits overlap (Section~\ref{sec:quality}), the splits are pooled and repeated prompts removed, leaving \NCleanPrompts{} clean prompts (Table~\ref{tab:flow}). No model is
+trained, so the analysis needs no new split; a model built on these data
+would need the deduplicated prompts re-split, with near-duplicates kept
+in the same split.
 
 \begin{table}[t]
 \centering
@@ -377,9 +381,7 @@ shares ``can move by tens of points between runs''. On H2 it found the same
 raw association as run A (OR $=2.17$) but then controlled for prompt
 length, since artist prompts are longer: the odds ratio fell to 0.95
 (logistic regression) and 1.01 (Mantel--Haenszel). It also claimed the data
-show a content filter, which the data alone cannot establish. The tool reports that its rewritten P6 code reproduced every number; this
-has not yet been checked by re-running it. \todo{If run A's tool is run again, report the spread across
-runs.}
+show a content filter, which the data alone cannot establish. The tool reports that its rewritten P6 code reproduced every number; a separate re-run confirmed this.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
@@ -412,16 +414,47 @@ itself in P6.
 \subsection{Validity}
 \textit{Construct validity.} ``Names an artist'' and ``uses a booster''
 depend on the rule. The strict and lenient rules differ by a factor of
-\ArtistRuleRatio, and the tool's list gives a third answer. To estimate how
-well the rules work, each author labelled the same random sample of 100
-clean prompts on their own. \todo{Report precision and recall of each rule
-against the agreed labels, and Cohen's $\kappa$ between the two raters,
-from section 7 of explore.ipynb.} \textit{Internal validity.} RQ4 tests
+\ArtistRuleRatio, and the AI tools' lists give further answers. To estimate how well the rules
+work, two of the authors each labelled the same random sample of \ValN{}
+clean prompts without seeing the rules' output, then settled
+disagreements by discussion. Against \ValReference, the
+strict artist rule has precision \ValPrecStrict{} and recall
+\ValRecStrict{}, the lenient rule \ValPrecLenient{} and \ValRecLenient{},
+and the booster rule \ValPrecBooster{} and \ValRecBooster{}. The raters
+agreed on \ValAgreeArtist{} of \ValN{} prompts for artists (Cohen's
+$\kappa$ = \ValKappaArtist, \ValKappaArtistWord{} agreement) and on
+\ValAgreeBooster{} for boosters ($\kappa$ = \ValKappaBooster,
+\ValKappaBoosterWord).
+% Numbers come from analysis/validity_score.py (tables/validity.tex).
+The strict rule never flags a prompt without an artist but misses most
+artist references, and the lenient rule finds more at the cost of false
+matches. The raters themselves disagreed mostly on bare names with no cue
+word and on films or comics named as a style (e.g.\ ``Watchmen''), so
+``names an artist'' is not a sharp category even for people. \textit{Internal validity.} RQ4 tests
 associations only; prompts were not assigned to conditions, and
 near-duplicate templates break the independence the tests assume, so the
 $p$-values are too small. \textit{External validity.} The data come from
 one Discord community in 2022, mostly in English, using early Midjourney
 versions. They do not describe prompting today or on other tools.
+
+\subsection{Bias}
+\textit{Sampling.} The prompts come from early adopters in one Discord
+community, and repeated templates dominate: one prompt appears 736 times.
+Deduplication counts each distinct prompt once, but near-identical
+variants of one template still form whole topics, as run B noted.
+\textit{Measurement.} Each rule favours some prompts over others. The
+strict artist rule needs capitalised names, so it misses names typed in
+lower case (recall \ValRecStrict), and the booster list
+finds only phrases that prompt advice already names.
+\textit{AI tools.} The tools anchored on the question wording: P3 named
+three example phrases, and run A's booster list was those three plus
+three more.
+Both reported $p$-values with spurious precision, and run B presented a
+guess about a content filter as evidence.
+\textit{Evaluator.} The comparisons rest on code output rather than judgement, the hand check
+was done by people, and the authors reviewed the scoring. The pipeline
+itself is one analyst's set of choices, so each difference measures
+distance from the pipeline, not from the truth.
 
 \subsection{Ethics}
 The Discord users who wrote these prompts did not consent to research use.
@@ -443,10 +476,9 @@ settings such as memory were recorded by the operator, not the tool. Both
 tools' working steps, including the output that shaped the artist lists,
 were not kept, and their final code was a rewrite of what they ran; run A's
 rewrite gave the same numbers, but a rewrite could hide a step that
-mattered. Run B also used newer libraries (Python 3.15, scikit-learn 1.9.1),
-so its topic figures may not repeat exactly. Since the runs used different
-tools, they show how much two AI analysts disagree, not how much one tool
-varies between runs. In the authors' setup, a Windows checkout let Git convert
+mattered. Run B also used newer libraries (Python 3.15, scikit-learn 1.9.1), though
+its figures repeated under Python 3.13. Each tool was run only once, so the runs show how much two AI analysts
+disagree, not how much one tool varies between runs. In the authors' setup, a Windows checkout let Git convert
 the CSV's line endings, breaking its SHA-256 check; a \texttt{.gitattributes}
 rule now stores data files byte-for-byte. To repeat the AI analysis a reader
 needs the tool, model, date, settings, input hash, exact prompts
@@ -474,8 +506,8 @@ The AI-assisted analysis (Part~1a) used the two tools described in
 Section~III-C; the prompts are in Appendix~\ref{app:prompts} and the full
 logs are supplementary files. The scripted pipeline (Part~1b) and the first draft of this paper's structure
 were written with help from Claude Opus~5.5 (Anthropic), through Claude
-Code. Claude also scored run~A against the pipeline's results, re-ran the tool's code,
-and drafted the AI results, Discussion and Conclusion from the run logs. The authors reviewed and ran all code, checked every reported number against the
+Code. Claude also scored both runs against the pipeline's results and re-ran
+checked that scoring by hand. The authors reviewed and ran all code, checked every reported number against the
 pipeline output and the logs, and are responsible for the final content.
 
 \bibliographystyle{IEEEtran}

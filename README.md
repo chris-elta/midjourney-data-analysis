@@ -35,8 +35,10 @@ by hand; change `analysis/prompt_utils.py` or `analysis/pipeline.py` and re-run.
    partner details. Check every entry in `a3references.bib`.
 3. **Validity check:** each partner labels the 100 prompts in
    `analysis/validity/handcheck.csv` on their own (columns `*_r1` / `*_r2`),
-   then re-run section 7 of `analysis/explore.ipynb` for precision, recall
-   and Cohen's kappa. Report it in Discussion > Validity.
+   then run `python3 analysis/validity_score.py` and rebuild the paper: it
+writes precision, recall and Cohen's kappa to `part1-paper/tables/validity.tex`,
+which Discussion > Validity uses (section 7 of `analysis/explore.ipynb` shows
+the same numbers).
 4. **Part 2:** write the methodology draft in
    `part2-methodology/` (skeleton only).
 

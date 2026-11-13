@@ -10,14 +10,14 @@ A,P4 topics stable (mean Jaccard),cosine 0.88 / 0.76; assignment agreement 81% /
 A,P5 H1 effect size,rank-biserial 0.60 (0.49 without option tokens),rank-biserial 0.40,+0.20,yes,yes,yes,yes,no,AI length counts parameter tokens so parameters inflate length; it noticed and ran a sensitivity check. Reported p as 1.7e-3677 (spurious precision).
 A,P5 H2 effect size,odds ratio 2.84; 20.9 pp difference; Cramer's V 0.17 (computed by us from its chi2=1957.2 n=64907),Cramer's V 0.08,+0.09,yes,yes,yes,yes,no,Larger effect because artist and booster definitions differ (50-name list; 6 phrases). AI warned p-values assume independence and made no causal claim.
 A,P6 code,consolidated reproduce_all script,n/a,n/a,n/a,yes,yes,yes,minor,"Ran on 11 Nov 2026 with Python 3.8 + numpy 1.24.4, scipy 1.10.1, scikit-learn 1.3.2: every number in P1-P5 reproduced exactly. AI said code is a consolidated rewrite, not a verbatim transcript. P6 also corrected a P1 error (52970 rows have at most one word token, not exactly one)."
-B,P1 duplicate rows,,180983,,,,,,,
-B,P1 test rows in train (%),,83.2,,,,,,,
-B,P2 median content words,,12 (IQR 7-21),,,,,,,
-B,P2 any parameter (%),,47.6,,,,,,,
-B,P2 --ar used (%),,36.1,,,,,,,
-B,P3 artist named (%),,14.4 strict / 24.3 lenient,,,,,,,
-B,P3 quality phrase (%),,36.2 (27 phrases),,,,,,,
-B,P4 topics stable (mean Jaccard),,0.81,,,,,,,
-B,P5 H1 effect size,,rank-biserial 0.40,,,,,,,
-B,P5 H2 effect size,,Cramer's V 0.08,,,,,,,
-B,P6 code,,n/a,,,,,,,
+B,P1 duplicate rows,180983 (73.5%),180983,0,yes,yes,yes,yes,no,"Exact-text count; same as ours. Sorted every row into six classes (empty, URL, mention, parameters/numbers only, lone word, prompt) and showed 96.7% of lone-word rows also occur inside longer prompts, which justified dropping them."
+B,P1 test rows in train (%),83.1 (exact text); 68.0 of real-prompt test rows,83.2,-0.1 pp,yes,yes,yes,yes,no,AI used exact text; we normalise case and whitespace first. Its prompt-row figure (68.0%) is close to ours (68.4%) because its non-prompt rule is close to ours.
+B,P2 median content words,12 (IQR 7-20),12 (IQR 7-21),0 (Q3 -1),yes,yes,yes,yes,no,"Counts descriptive words after removing parameters, URLs and weights, as we do. Denominator 59733 vs our 57670: it drops only lone words, we require 3 content words."
+B,P2 any parameter (%),46.2,47.6,-1.4 pp,yes,yes,yes,yes,no,"Accepts --, em dash and en dash like ours. Gap is the denominator (two-word prompts kept)."
+B,P2 --ar used (%),35.3 (--ar or --aspect),36.1,-0.8 pp,yes,yes,yes,yes,no,"Top ratios agree (16:9, 9:16, 2:3). Also reduced w/h pairs to ratios and reported orientation."
+B,P3 artist named (%),21.3 (168-name list); 17.2 wording rule ('style of' / 'by'),14.4 strict / 24.3 lenient,within our strict-lenient range,yes,yes,yes,yes,no,Name list mined from the data and checked by hand for ambiguous names (e.g. excluded 'Mobius strip'). Top name agrees (Craig Mullins).
+B,P3 quality phrase (%),33.1 (16 core phrases; 23 phrase groups reported),36.2 (27 phrases),-3.1 pp (16 vs 27 phrases),yes,yes,yes,yes,no,Much closer to ours than run A because the list is larger; still fewer phrases than ours.
+B,P4 topics stable (mean Jaccard),top-10 Jaccard 0.75 on 80% subsamples (0.84 across seeds; NMF vs LDA 0.17),0.81,-0.06,yes,yes,yes,yes,no,"Chose K=18 by NPMI coherence and seed stability, fitted a second model without style words (K=10, 16), compared with LDA. Said topic shares 'can move by tens of points between runs'."
+B,P5 H1 effect size,rank-biserial 0.41 (0.41 with near-duplicates collapsed),rank-biserial 0.40,+0.01,yes,yes,yes,yes,no,"Parameters removed before counting length, so no inflation (cf. run A 0.60). Also gave Hodges-Lehmann shift (6 words) and Cohen's d 0.62."
+B,P5 H2 effect size,"odds ratio 2.17, phi 0.157; length-controlled OR 0.95 (logistic) and 1.01 (Mantel-Haenszel)",Cramer's V 0.08,+0.08 (raw V),yes,yes,yes,yes,no,"Controlled for prompt length because artist prompts are longer; the association disappears. Reported Fisher p = 2e-311 (spurious precision, as run A)."
+B,P6 code,consolidated reproduce_all.py,n/a,n/a,n/a,yes,yes,yes,minor,"AI said the file combines its working scripts and was re-run end to end. Re-run 12 Nov 2026 by Claude (Opus 5.5) in a separate session on the LF CSV (SHA-256 582e6d09...): Python 3.13, numpy 2.5.3, scipy 1.18.1, scikit-learn 1.9.1. q1-q4 and q6 reproduce every number reported. q5 main model (all words, K=18) reproduces exactly: seed J 0.843, 80% subsample J 0.749, NMF-vs-LDA 0.173; second model (K=10, 16) also matches: seed J 0.737/0.798, subsample J 0.712/0.730, LDA 0.220/0.229. Wrong/unsupported: P0 claimed 'evidence of a content filter' from missing words, which the data alone cannot establish."
